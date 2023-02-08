@@ -32,9 +32,9 @@ pointLight.position.set(5,5,5)
 const ambientLight = new THREE.AmbientLight(0xffffff)
 scene.add(pointLight, ambientLight)
 
-const lightHelper = new THREE.PointLightHelper(pointLight) // visualise light source
-const gridHelper = new THREE.GridHelper(200, 50) // visualise grid
-scene.add(lightHelper, gridHelper)
+// const lightHelper = new THREE.PointLightHelper(pointLight) // visualise light source
+// const gridHelper = new THREE.GridHelper(200, 50) // visualise grid
+// scene.add(lightHelper, gridHelper)
 
 const controls = new OrbitControls(camera, renderer.domElement) // allow mouse to interact with the page
 
@@ -54,20 +54,6 @@ Array(200).fill().forEach(addStar)
 const spaceTexture = new THREE.TextureLoader().load('space.jpg')
 scene.background = spaceTexture
 
-function animate() {
-  requestAnimationFrame( animate )
-
-  torus.rotation.x += 0.01;
-  torus.rotation.y += 0.005;
-  torus.rotation.z += 0.01;
-
-  controls.update()
-
-  renderer.render( scene, camera);
-}
-
-animate()
-
 const deskTexture = new THREE.TextureLoader().load('desk.png')
 const desk = new THREE.Mesh(
   new THREE.BoxGeometry(3, 3, 3),
@@ -85,3 +71,37 @@ const moon = new THREE.Mesh(
   }),
 )
 scene.add(moon)
+
+moon.position.z = 30;
+moon.position.setX(-10)
+
+function moveCamera() {
+  const t = document.body.getBoundingClientRect().top // always negative
+
+  moon.rotation.x += 0.05;
+  moon.rotation.y += 0.075;
+  moon.rotation.z += 0.05;
+  
+  desk.rotation.y += 0.01;
+  desk.rotation.z += 0.01;
+
+  camera.position.x = t * -0.0002
+  camera.position.y = t * -0.0002
+  camera.position.z = t * -0.01
+}
+
+document.body.onscroll = moveCamera
+
+function animate() {
+  requestAnimationFrame( animate )
+
+  torus.rotation.x += 0.01;
+  torus.rotation.y += 0.005;
+  torus.rotation.z += 0.01;
+
+  controls.update()
+
+  renderer.render( scene, camera);
+}
+
+animate()
